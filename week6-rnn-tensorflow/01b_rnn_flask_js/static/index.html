@@ -1,35 +1,41 @@
 <html>
 
 <head>
-    <meta charset="UTF-8">
-    <title>LSTM Example</title>
-    <script language="javascript" type="text/javascript" src="libraries/p5.js"></script>
-    <script language="javascript" type="text/javascript" src="libraries/p5.dom.js"></script>
-    <script language="javascript" type="text/javascript" src="sketch.js"></script>
+  <meta charset="UTF-8">
+  <title>LSTM Example</title>
+  <script language="javascript" type="text/javascript" src="libraries/p5.js"></script>
+  <script language="javascript" type="text/javascript" src="libraries/p5.dom.js"></script>
+  <script language="javascript" type="text/javascript" src="sketch.js"></script>
 
-    <style>
-        #original {
-            background-color: #EEE;
-            padding: 4px 0px 4px 4px
-        }
+  <style>
+  #original {
+    background-color: #EEE;
+    padding: 4px 0px 4px 4px
+  }
 
-        #prediction {
-            background-color: #CCC;
-            padding: 4px 0px 4px 0px
-        }
-    </style>
+  #prediction {
+    background-color: #CCC;
+    padding: 4px 0px 4px 0px
+  }
+  </style>
 </head>
 
 <body>
 
-    <body>
-        <h1>RNN/LSTM Text Generation Example</h1>
-        <textarea id="textInput" style="width: 300px; height: 50px;">type here</textarea><br/> length: <input id="lenSlider" type="range" min="1" max="100" value="10"> <span id="length">10</span><br/> temperature:
-        <input id="tempSlider" type="range" min="0"
-            max="1" step="0.01"><span id="temperature">0.5</span>
-            <p id="result">
-                <span id="original">original</span><span id="prediction">result</span>
-            </p>
-    </body>
+  <body>
+    <h1>RNN/LSTM Text Generation Example</h1>
+    <textarea id="textInput" style="width: 300px; height: 50px;">type here</textarea><br/> length: <input id="lenSlider" type="range" min="1" max="100" value="10"> <span id="length">10</span><br/> temperature:
+    <input id="tempSlider" type="range" min="0" max="1" step="0.01"><span id="temperature">0.5</span><br />
+    <form>
+      <input type="radio" name="model" value="model1" checked="checked"> Hamlet<br>
+      <input type="radio" name="model" value="model2"> The Metamorphosis<br>
+    </form>
 
-</html>
+
+
+    <p id="result">
+      <span id="original">original</span><span id="prediction">result</span>
+    </p>
+  </body>
+
+  </html>

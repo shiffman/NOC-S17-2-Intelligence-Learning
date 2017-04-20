@@ -27,8 +27,9 @@ def sample(preds, temperature=1.0):
     probas = np.random.multinomial(1, preds, 1)
     return np.argmax(probas)
 
-# Load in the model
-model = load_model('model.h5')
+# Load the models
+model1 = load_model('model.h5')
+model2 = load_model('metamorphosis.h5')
 
 # Same maxlen as in the model
 maxlen = 40
@@ -36,14 +37,18 @@ maxlen = 40
 # We have to build the same dictionaries here from the source text
 # We could instead save and load these instead?
 # read the file and convert to lowercase (must match how we did it during training)
-text = open('hamlet.txt').read().lower()
+text_m1 = open('hamlet.txt').read().lower()
+text_m2 = open('metamorphosis.txt').read().lower()
 # Get a list of all the unique characters
-chars = sorted(list(set(text)))
+chars_m1 = sorted(list(set(text_m1)))
+chars_m2 = sorted(list(set(text_m2)))
 # Two dictionaries
 # Lookup a character by index
 # Lookup an index by character
-char_indices = dict((c,i) for i, c in enumerate(chars))
-indices_char = dict((i,c) for i,c in enumerate(chars))
+char_indices_m1 = dict((c,i) for i, c in enumerate(chars_m1))
+indices_char_m1 = dict((i,c) for i,c in enumerate(chars_m1))
+char_indices_m2 = dict((c,i) for i, c in enumerate(chars_m2))
+indices_char_m2 = dict((i,c) for i,c in enumerate(chars_m2))
 
 # Routes
 # This is root path, use index.html in "static" folder
@@ -69,8 +74,26 @@ def upload():
     temperature = float(request.form['temperature'])
     # Grab length (how many chars to generate)
     length = int(request.form['length'])
+    # Which model to use
+    if request.form['model'] == 'model1':
+        model = model1
+        text = text_m1
+        chars = chars_m1
+        char_indices = char_indices_m1
+        indices_char = indices_char_m1
+    else:
+        model = model2
+        text = text_m2
+        chars = chars_m2
+        char_indices = char_indices_m2
+        indices_char = indices_char_m2
     # Start with empty generated string
     generated = ''
+
+    while len(sentence) < maxlen:
+        sentence += sentence
+    if len(sentence) > maxlen:
+        sentence = sentence[:maxlen]
 
     for i in range(length):
         # First vectorize the text we are feeding in
