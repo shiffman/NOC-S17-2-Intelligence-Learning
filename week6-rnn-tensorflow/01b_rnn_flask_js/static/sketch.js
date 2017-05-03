@@ -15,6 +15,8 @@ var maxlen = 40;
 // Variable to stop the sketch from querying the server too often
 var waiting = false;
 
+var modelToUse;
+
 function setup() {
   noCanvas();
 
@@ -27,6 +29,7 @@ function setup() {
   textInput.input(generate);
   lengthSlider.input(generate);
   tempSlider.input(generate);
+
 }
 
 function generate() {
@@ -35,30 +38,24 @@ function generate() {
   select('#length').html(lengthSlider.value())
   select('#temperature').html(tempSlider.value())
 
+  // Which model to use
+  modelToUse = document.querySelector('input[name="model"]:checked').value;
+
   // Grab the original text
   var original = textInput.value();
   // Make it to lower case
   var txt = original.toLowerCase();
 
-  // This is some goofy parsing to make sure the seed text is
-  // always 40 characters. This should probably be done
-  // one the python side.
-  while (txt.length < maxlen) {
-    txt += original.toLowerCase();
-  }
-  if (txt.length > maxlen) {
-    txt = txt.substring(txt.length - maxlen, txt.length);
-  }
-
   // Here is the data to post
   var data = {
     seed: txt,
     temperature: tempSlider.value(),
-    length: lengthSlider.value()
+    length: lengthSlider.value(),
+    model: modelToUse
   }
 
   // If we aren't waiting for previous results, go ahead and post
-  if (!waiting) {
+  if (!waiting && original.length > 1) {
     // Now we are waiting
     waiting = true;
     console.log('Posting seed: ' + txt);
