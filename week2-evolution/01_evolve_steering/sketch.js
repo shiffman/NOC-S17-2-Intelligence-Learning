@@ -7,6 +7,8 @@
 // An array of vehicles
 var population = [];
 
+var explosions = [];
+
 // An array of "food"
 var food = [];
 // An array of "poison"
@@ -18,7 +20,27 @@ var nutrition = [0.1, -1];
 // Show additional info on DNA?
 var debug;
 
+//Images URLS
+var imgURL = "http://i.imgur.com/A70F5bI.png";
+var explosionURL =  "http://i.imgur.com/fGgMuJH.png"; 
+
+//Sprite images variables 
+var explosion;
+var misile;
+
+function preload(){
+//Load images
+misile = loadImage(imgURL);
+explosion = loadImage(explosionURL);
+}
+
 function setup() {
+//Create sprite images
+misile = new Sprite(misile,46,15);
+misile.load();
+
+explosion = new Sprite(explosion,100,100);
+explosion.load();
 
   // Add canvas and grab checkbox
   var canvas = createCanvas(800, 600);
@@ -76,6 +98,7 @@ function draw() {
 
     // If the vehicle has died, remove
     if (v.dead()) {
+	  explosions.push(new Explosion(v));
       population.splice(i, 1);
     } else {
       // Every vehicle has a chance of cloning itself
@@ -86,6 +109,15 @@ function draw() {
     }
   }
 
+  for(var i=explosions.length-1;i>=0;i--){
+  var e = explosions[i];
+  e.update();
+  e.display();
+  if(!e.alive){
+  explosions.splice(i,1);
+  }
+ }
+  
   // Draw all the food and all the poison
   for (var i = 0; i < food.length; i++) {
     fill(0, 255, 0);
