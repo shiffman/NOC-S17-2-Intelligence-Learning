@@ -6,7 +6,7 @@
 
 // Cities
 var cities = [];
-var totalCities = 15;
+var totalCities = 30;
 
 // Best path overall
 var recordDistance = Infinity;

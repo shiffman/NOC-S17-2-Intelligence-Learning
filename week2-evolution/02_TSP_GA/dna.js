@@ -37,7 +37,7 @@ function DNA(total, order) {
 
     // Shuffle randomly 100 times
     // Is this good enough for variation?
-    for (var n = 0; n < 100; n++) {
+    for (var n = 0; n < 10; n++) {
       this.shuffle();
     }
   }
@@ -200,7 +200,7 @@ for(i = 0; i<total; i++){
     }
   }
 
-  for (var n = 0; n < 50; n++) {
+  for (var n = 0; n < 10; n++) {
     shuffle(gaps,true);
   }
 
@@ -215,7 +215,7 @@ for(i = 0; i<total; i++){
   mutate(neworder,0.25,1);
 
   if (random(1) < 0.05) {
-    for (var n = 0; n < 100; n++) {
+    for (var n = 0; n < 10; n++) {
       shuffle(neworder,true);
     }
   }
@@ -225,7 +225,9 @@ for(i = 0; i<total; i++){
 
 function mutate(array,p,n){
   if (random(1) < p/n) {
-    shuffle(array,true);
-    mutate(array,p,n+0.5);
+    a=floor(random(array.length));
+    b=floor(random(array.length));
+    swap(array,a,b);
+    mutate(array,p,n+0.25);
   }
 }
