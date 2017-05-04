@@ -97,3 +97,130 @@ DNA.prototype.show = function() {
     ellipse(cities[n].x, cities[n].y, 8, 8);
   }
 }
+
+// This is one way to crossover two paths
+DNA.prototype.crossover = function(other) {
+
+  // Grab two orders
+  var order1 = this.order;
+  var order2 = other.order;
+
+  // Pick a random start and endpoint
+  var start = floor(random(order1.length));
+  var end = floor(random(start + 1, order1.length + 1));
+
+  // Grab part of the the first order
+  var neworder = order1.slice(start, end);
+
+  // How many spots do we need to add?
+  var leftover = order1.length - neworder.length;
+
+  // Go through order 2
+  var count = 0;
+  var i = 0;
+  // As long as we aren't finished
+  while (count < leftover) {
+    // Take a city from order2
+    var city = order2[i];
+    // If it isn't part of the new child path yet
+    if (!neworder.includes(city)) {
+      // Add it!
+      neworder.push(city);
+      count++;
+    }
+    i++;
+  }
+  return neworder;
+}
+
+
+DNA.prototype.crossover2 = function(other) {
+  var order1 = this.order;
+  var order2 = other.order;
+
+  var total = order1.length;
+  // create an array of -1s
+  var neworder = [];
+  for (var i = 0; i < total; i++) {
+    neworder[i] = -1;
+  }
+
+  // make a random city array
+  var citychoice = [];
+  for (var i = 0; i < total; i++) {
+    citychoice[i] = i;
+  }
+  for (var n = 0; n < 100; n++) {
+    shuffle(citychoice,true);
+  }
+
+
+for(i = 0; i<total; i++){
+  //my own find function - can't find one in p5.js..
+  var index1=-1;
+  for(j = 0; j<total; j++){
+    if (order1[j] == citychoice[i]){
+      index1 = j;
+    }
+  }
+
+  var index2=-1;
+  for(j = 0; j<total; j++){
+    if (order2[j] == citychoice[i]){
+      index2 = j;
+    }
+  }
+
+    //take the city from a parent based on fitness
+    if (random(this.normalizeFitness+other.normalizeFitness)<this.normalizeFitness){
+      //put city into parent's index
+      if (neworder[index1] == -1) {
+        neworder[index1] = citychoice[i];
+      }
+      else if (neworder[index2] == -1) {
+        neworder[index2] = citychoice[i];
+      }
+    }
+    else {
+      //put city into parent's index
+      if (neworder[index2] == -1) {
+        neworder[index2] = citychoice[i];
+      }
+      else if (neworder[index1] == -1) {
+        neworder[index1] = citychoice[i];
+      }
+    }
+  }
+
+    // Randomly fill in gaps
+  var gaps=[];
+  for (var i = 0; i < total; i++) {
+    if(!neworder.includes(i)){
+      gaps.push(i);
+    }
+  }
+
+  for (var n = 0; n < 50; n++) {
+    shuffle(gaps,true);
+  }
+
+  var i=0;
+  for (var j = 0; j < total; j++) {
+    if (neworder[j]==-1) {
+      neworder[j] = gaps[i];
+      i++;
+    }
+  }
+
+  if (random(1) < 0.1) {
+    shuffle(neworder,true);
+  }
+
+  if (random(1) < 0.02) {
+    for (var n = 0; n < 100; n++) {
+      shuffle(neworder,true);
+    }
+  }
+
+  return neworder;
+}
