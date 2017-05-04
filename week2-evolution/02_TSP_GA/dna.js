@@ -23,7 +23,7 @@ function DNA(total, order) {
     // Just copy the order
     this.order = order.slice();
     // Mutation
-    // 50% of the time shuffle one spot to see if it improves
+    // 5% of the time shuffle one spot to see if it improves
     if (random(1) < 0.05) {
       this.shuffle();
     }
@@ -172,7 +172,10 @@ for(i = 0; i<total; i++){
   }
 
     //take the city from a parent based on fitness
-    if (random(sq(this.normalizeFitness)+sq(other.normalizeFitness))<sq(this.normalizeFitness)){
+    //if (random(sq(this.normalizeFitness)+sq(other.normalizeFitness))<sq(this.normalizeFitness)){  //square fitness parenting (fast hardening)
+    //if (random((this.normalizeFitness)+(other.normalizeFitness))<(this.normalizeFitness)){  //linea fitness parenting (medium hardening)
+    if (random(sqrt(this.normalizeFitness)+sqrt(other.normalizeFitness))<sqrt(this.normalizeFitness)){  //sqrt fitness parenting (slowest hardening)
+    //if(random(1)<0.5){    //equal opportunity parenting (no hardening)
       //put city into parent's index
       if (neworder[index1] == -1) {
         neworder[index1] = citychoice[i];
@@ -211,23 +214,5 @@ for(i = 0; i<total; i++){
       i++;
     }
   }
-
-  mutate(neworder,0.25,1);
-
-  if (random(1) < 0.05) {
-    for (var n = 0; n < 10; n++) {
-      shuffle(neworder,true);
-    }
-  }
-
   return neworder;
-}
-
-function mutate(array,p,n){
-  if (random(1) < p/n) {
-    a=floor(random(array.length));
-    b=floor(random(array.length));
-    swap(array,a,b);
-    mutate(array,p,n+0.25);
-  }
 }

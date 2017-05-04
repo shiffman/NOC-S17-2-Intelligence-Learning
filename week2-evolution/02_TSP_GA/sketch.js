@@ -6,7 +6,7 @@
 
 // Cities
 var cities = [];
-var totalCities = 30;
+var totalCities = 50;
 
 // Best path overall
 var recordDistance = Infinity;
@@ -99,6 +99,7 @@ function draw() {
 
     // Crossover!
     var order = a.crossover2(b);
+    order = mutate(order,0.05,0.5);
     newPop[i] = new DNA(totalCities, order);
   }
 
@@ -169,4 +170,48 @@ function weightmap(){
     }
   }
   strokeWeight(1);
+}
+
+function mutate(array,p,n) {
+  var diminish = 1;
+  var temp = 0;
+  var a = 0;
+  var b = 0;
+  var citytemp = [];
+  var outarray = array;
+  if (random(1) < p/n) {
+    var r =random(1);
+    //insert a random city chain somewhere leaving rest unchanged - spike avoidance
+    if(r<0.33) {
+      a=floor(random(array.length));
+      b=floor(random(array.length));
+      temp = max(a,b);
+      a = min(a,b);
+      b = temp;
+      citytemp = array.slice(a,b);
+      outarray = concat(array.slice(0,a),array.slice(b));
+      splice(array,reverse(citytemp),random(array.length));
+      mutate(outarray,p,n+diminish);
+    }
+    //connect start and end and delete random arc - longest arc deletion
+    else if(r<0.66){
+      a=floor(random(array.length));
+      outarray = concat(array.slice(a),array.slice(0,a));
+      mutate(outarray,p,n+diminish);
+    }
+    //reverse a random sequence - line crossing removal
+    else if(r<1){
+      a=floor(random(array.length));
+      b=floor(random(array.length));
+      temp = max(a,b);
+      b = min(a,b);
+      a = temp;
+      outarray = concat(array.slice(0,a),reverse(array.slice(a,b),array.slice(b)));
+      mutate(outarray,p,n+diminish);
+    }
+  }
+  else{
+    print('done')
+    return outarray
+  }
 }
