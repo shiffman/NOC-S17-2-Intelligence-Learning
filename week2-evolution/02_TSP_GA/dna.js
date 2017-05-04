@@ -172,7 +172,7 @@ for(i = 0; i<total; i++){
   }
 
     //take the city from a parent based on fitness
-    if (random(this.normalizeFitness+other.normalizeFitness)<this.normalizeFitness){
+    if (random(sq(this.normalizeFitness)+sq(other.normalizeFitness))<sq(this.normalizeFitness)){
       //put city into parent's index
       if (neworder[index1] == -1) {
         neworder[index1] = citychoice[i];
@@ -212,15 +212,20 @@ for(i = 0; i<total; i++){
     }
   }
 
-  if (random(1) < 0.1) {
-    shuffle(neworder,true);
-  }
+  mutate(neworder,0.25,1);
 
-  if (random(1) < 0.02) {
+  if (random(1) < 0.05) {
     for (var n = 0; n < 100; n++) {
       shuffle(neworder,true);
     }
   }
 
   return neworder;
+}
+
+function mutate(array,p,n){
+  if (random(1) < p/n) {
+    shuffle(array,true);
+    mutate(array,p,n+0.5);
+  }
 }
