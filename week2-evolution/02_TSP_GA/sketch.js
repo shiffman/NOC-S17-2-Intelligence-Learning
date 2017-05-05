@@ -106,6 +106,7 @@ function draw() {
     // Crossover!
     var order = a.crossover2(b);
     order = mutate(order,0.20,1);
+      if (apocalypse_counter < 2){
         order = mutate(order,0.999,1);
       }
     newPop[i] = new DNA(totalCities, order);
