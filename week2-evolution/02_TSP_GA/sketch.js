@@ -6,7 +6,7 @@
 
 // Cities
 var cities = [];
-var totalCities = 50;
+var totalCities = 30;
 
 // Best path overall
 var recordDistance = Infinity;
@@ -15,6 +15,7 @@ var bestEver;
 // Population of possible orders
 var population = [];
 var popTotal = 200;
+var apocolypse_counter = 9;
 
 function setup() {
   createCanvas(600, 600);
@@ -90,6 +91,11 @@ function draw() {
   // A new population
   var newPop = [];
 
+  apocolypse_counter++;
+  if (apocolypse_counter>1000){
+    apocolypse_counter = 0;
+    print('apocolypse')
+  }
   // Sam population size
   for (var i = 0; i < population.length; i++) {
 
@@ -99,12 +105,16 @@ function draw() {
 
     // Crossover!
     var order = a.crossover2(b);
-    order = mutate(order,0.05,0.5);
+    order = mutate(order,0.20,1);
+      if (apocolypse_counter < 5){
+        order = mutate(order,0.90,1);
+      }
     newPop[i] = new DNA(totalCities, order);
   }
 
   // New population!
   population = newPop;
+  population[1] = bestEver;
 }
 
 // This is a new algorithm to select based on fitness probability!
@@ -173,16 +183,16 @@ function weightmap(){
 }
 
 function mutate(array,p,n) {
-  var diminish = 1;
+  var diminish = 5;
   var temp = 0;
   var a = 0;
   var b = 0;
   var citytemp = [];
   var outarray = array;
-  if (random(1) < p/n) {
+  if (random(1) < p) {
     var r =random(1);
     //insert a random city chain somewhere leaving rest unchanged - spike avoidance
-    if(r<0.33) {
+    if(r<0.10) {
       a=floor(random(array.length));
       b=floor(random(array.length));
       temp = max(a,b);
@@ -190,28 +200,38 @@ function mutate(array,p,n) {
       b = temp;
       citytemp = array.slice(a,b);
       outarray = concat(array.slice(0,a),array.slice(b));
-      splice(array,reverse(citytemp),random(array.length));
-      mutate(outarray,p,n+diminish);
+      splice(outarray,reverse(citytemp),random(array.length));
+      outarray = mutate(outarray,p,n+diminish);
     }
     //connect start and end and delete random arc - longest arc deletion
-    else if(r<0.66){
+    else if(r<0.20){
       a=floor(random(array.length));
       outarray = concat(array.slice(a),array.slice(0,a));
-      mutate(outarray,p,n+diminish);
+      outarray = mutate(outarray,p,n+diminish);
     }
     //reverse a random sequence - line crossing removal
-    else if(r<1){
+    else if(r<0.90){
       a=floor(random(array.length));
       b=floor(random(array.length));
-      temp = max(a,b);
-      b = min(a,b);
+      temp = min(a,b);
+      b = max(a,b);
       a = temp;
-      outarray = concat(array.slice(0,a),reverse(array.slice(a,b),array.slice(b)));
-      mutate(outarray,p,n+diminish);
+      outarray = concat(array.slice(0,a),reverse(array.slice(a,b)));
+      outarray = concat(outarray,(array.slice(b)));
+      outarray = mutate(outarray,p,n+diminish);
     }
+    //swap 2 random cities
+    else if (r<1){
+      a=floor(random(array.length));
+      b=floor(random(array.length));
+      citytemp = array[a];
+      array[a] = array[b];
+      array[b] = temp;
+      outarray = mutate(outarray,p,n+diminish);
+    }
+    return outarray
   }
   else{
-    print('done')
     return outarray
   }
 }

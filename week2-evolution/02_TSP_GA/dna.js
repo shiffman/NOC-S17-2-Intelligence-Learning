@@ -37,7 +37,7 @@ function DNA(total, order) {
 
     // Shuffle randomly 100 times
     // Is this good enough for variation?
-    for (var n = 0; n < 10; n++) {
+    for (var n = 0; n < 100; n++) {
       this.shuffle();
     }
   }
