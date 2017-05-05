@@ -174,7 +174,8 @@ for(i = 0; i<total; i++){
     //take the city from a parent based on fitness
     //if (random(sq(this.normalizeFitness)+sq(other.normalizeFitness))<sq(this.normalizeFitness)){  //square fitness parenting (fast hardening)
     //if (random((this.normalizeFitness)+(other.normalizeFitness))<(this.normalizeFitness)){  //linea fitness parenting (medium hardening)
-    if (random(sqrt(this.normalizeFitness)+sqrt(other.normalizeFitness))<sqrt(this.normalizeFitness)){  //sqrt fitness parenting (slowest hardening)
+    //if (random(sqrt(this.normalizeFitness)+sqrt(other.normalizeFitness))<sqrt(this.normalizeFitness)){  //sqrt fitness parenting (slow hardening)
+    if (random(Math.pow(this.normalizeFitness,0.0001)+Math.pow(other.normalizeFitness,0.0001))<Math.pow(this.normalizeFitness,0.0001)){  //nth root fitness parenting (really slow hardening)
     //if(random(1)<0.5){    //equal opportunity parenting (no hardening)
       //put city into parent's index
       if (neworder[index1] == -1) {

@@ -6,7 +6,7 @@
 
 // Cities
 var cities = [];
-var totalCities = 20;
+var totalCities = 50;
 
 // Best path overall
 var recordDistance = Infinity;
@@ -15,7 +15,7 @@ var bestEver;
 // Population of possible orders
 var population = [];
 var popTotal = 200;
-var apocolypse_counter = 9;
+var apocalypse_counter = 9;
 
 function setup() {
   createCanvas(600, 600);
@@ -91,10 +91,10 @@ function draw() {
   // A new population
   var newPop = [];
 
-  apocolypse_counter++;
-  if (apocolypse_counter>1000){
-    apocolypse_counter = 0;
-    print('apocolypse')
+  apocalypse_counter++;
+  if (apocalypse_counter>200){
+    apocalypse_counter = 0;
+    print('apocalypse')
   }
   // Sam population size
   for (var i = 0; i < population.length; i++) {
@@ -106,8 +106,7 @@ function draw() {
     // Crossover!
     var order = a.crossover2(b);
     order = mutate(order,0.20,1);
-      if (apocolypse_counter < 5){
-        order = mutate(order,0.90,1);
+        order = mutate(order,0.999,1);
       }
     newPop[i] = new DNA(totalCities, order);
   }
@@ -189,7 +188,7 @@ function mutate(array,p,n) {
   var b = 0;
   var citytemp = [];
   var outarray = array;
-  if (random(1) < p) {
+  if ((random(1) < p )&&(n<1+diminish*5)) {
   var r =random(1);
     //insert a random city chain somewhere leaving rest unchanged - spike avoidance
     if(r<0.10) {
