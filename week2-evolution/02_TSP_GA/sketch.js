@@ -6,7 +6,7 @@
 
 // Cities
 var cities = [];
-var totalCities = 30;
+var totalCities = 20;
 
 // Best path overall
 var recordDistance = Infinity;
@@ -183,14 +183,14 @@ function weightmap(){
 }
 
 function mutate(array,p,n) {
-  var diminish = 5;
+  var diminish = 1;
   var temp = 0;
   var a = 0;
   var b = 0;
   var citytemp = [];
   var outarray = array;
   if (random(1) < p) {
-    var r =random(1);
+  var r =random(1);
     //insert a random city chain somewhere leaving rest unchanged - spike avoidance
     if(r<0.10) {
       a=floor(random(array.length));
@@ -201,12 +201,18 @@ function mutate(array,p,n) {
       citytemp = array.slice(a,b);
       outarray = concat(array.slice(0,a),array.slice(b));
       splice(outarray,reverse(citytemp),random(array.length));
+      if (outarray.length!=array.length){
+        print('mut1')
+      }
       outarray = mutate(outarray,p,n+diminish);
     }
     //connect start and end and delete random arc - longest arc deletion
     else if(r<0.20){
       a=floor(random(array.length));
       outarray = concat(array.slice(a),array.slice(0,a));
+      if (outarray.length!=array.length){
+        print('mut2')
+      }
       outarray = mutate(outarray,p,n+diminish);
     }
     //reverse a random sequence - line crossing removal
@@ -218,15 +224,21 @@ function mutate(array,p,n) {
       a = temp;
       outarray = concat(array.slice(0,a),reverse(array.slice(a,b)));
       outarray = concat(outarray,(array.slice(b)));
+      if (outarray.length!=array.length){
+        print('mut3')
+      }
       outarray = mutate(outarray,p,n+diminish);
     }
     //swap 2 random cities
     else if (r<1){
       a=floor(random(array.length));
       b=floor(random(array.length));
-      citytemp = array[a];
+      temp = array[a];
       array[a] = array[b];
       array[b] = temp;
+      if (outarray.length!=array.length){
+        print('mut4')
+      }
       outarray = mutate(outarray,p,n+diminish);
     }
     return outarray
